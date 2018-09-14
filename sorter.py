@@ -196,7 +196,7 @@ class Sorter:
 
         return
 
-    def insertSort(self, array):
+    def insertCommonSort(self, array):
         size = array.__len__()
         if size < 2:
             return
@@ -235,6 +235,67 @@ class Sorter:
 
         array[0 : size+1] = temp[0 : size+1]
 
+    def insertBSearchSort(self, array):
+        size = array.__len__()
+        if size < 2:
+            return
+        temp = []
+
+        if array[0] > array[1]:
+            temp.append(array[1])
+            temp.append(array[0])
+        else:
+            temp = arrap[0:1]
+
+        print("at first %s" %temp)
+        #确保temp长度为2
+        for i in range(2, size):
+            target = array[i]
+            left  = 0
+            right = temp.__len__() - 1
+
+            insert_flag = 0
+            while left <= right:
+                mid = (left + right) // 2
+                if (temp[mid] == target):
+                    temp.insert(mid, target)
+                    insert_flag = 1
+                    break
+
+                if (temp[mid] > target):
+                    right = mid - 1
+                else:
+                    left = mid + 1
+
+                print("left=%d, right=%d mid=%d target=%d temp=%s" %(left, right, mid, target, temp))
+
+            if insert_flag == 0:
+                temp.insert(left, target)
+
+            print("current temp=%s" %temp)
+
+        array[0 : size+1] = temp[0 : size+1]
+
+    def selectSort(self, array):
+        size       = array.__len__()
+        temp_array = []
+
+        for i in range(size):
+            target     = array[0]
+            target_pos = 0
+
+            for j in range(1, array.__len__()):
+                if array[j] <= target:
+                    target     = array[j]
+                    target_pos = j
+            array.pop(target_pos)
+
+            print("target=%d" %target)
+
+            temp_array.append(target)
+
+        array[0 : size+1] = temp_array[0 : size+1]
+
 if __name__ == '__main__':
     array = [12, 11, 5, 3, 7, 4, 19, 3, 8, 6]
     size  = array.__len__()
@@ -248,7 +309,6 @@ if __name__ == '__main__':
     #快速排序
     #target.quickSort(array, 0, size - 1)
 
-
     #归并排序
     #target.mergeSort(array, 0, size - 1)
 
@@ -259,6 +319,12 @@ if __name__ == '__main__':
     #target.bubbleCockTailSort(array)
 
     #插入排序
-    target.insertSort(array)
+    #target.insertCommonSort(array)
+
+    #二分插入排序
+    target.insertBSearchSort(array)
+
+    #选择排序
+    #target.selectSort(array)
 
     print("sorted array is: %s" %array)
