@@ -206,7 +206,7 @@ class Sorter:
             temp.append(array[1])
             temp.append(array[0])
         else:
-            temp = arrap[0:1]
+            temp = array[0:2]
 
         print("at first %s" %temp)
         #确保temp长度为2
@@ -276,6 +276,44 @@ class Sorter:
 
         array[0 : size+1] = temp[0 : size+1]
 
+    def shellGroupSort(self, array, start, gap):
+        size         = array.__len__()
+        group_array  = []
+        target_array = []
+
+        #抽取本组元素构成一个新列表
+        i = start
+        while i < size:
+            group_array.append(array[i])
+            i += gap
+
+        #对新列表执行插入排序，为明确操作，将排序结果存储在目标列表中
+        print("%%%% group_array = %s" %group_array)
+        self.insertCommonSort(group_array)
+        target_array = group_array.copy()
+        print("%%%% target_array = %s" %target_array)
+
+
+        #将排序结果的目标列表写回源列表中
+        i = start
+        j = 0
+        while i < size:
+            array[i] = target_array[j]
+            i += gap
+            j += 1
+        print("%%%% array = %s" %array)
+
+    def insertShellSort(self, array):
+        size = array.__len__()
+        gap  = size // 2
+
+        while gap > 0:
+            for gid in range(0, gap):
+                self.shellGroupSort(array, gid, gap)
+
+            gap //= 2
+
+
     def selectSort(self, array):
         size       = array.__len__()
         temp_array = []
@@ -322,7 +360,10 @@ if __name__ == '__main__':
     #target.insertCommonSort(array)
 
     #二分插入排序
-    target.insertBSearchSort(array)
+    #target.insertBSearchSort(array)
+
+    #希尔插入排序
+    target.insertShellSort(array)
 
     #选择排序
     #target.selectSort(array)
