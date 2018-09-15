@@ -334,6 +334,89 @@ class Sorter:
 
         array[0 : size+1] = temp_array[0 : size+1]
 
+    #计数排序
+    def countSort(self, array):
+        size = array.__len__()
+        #统计TOTAL以内的正数
+        TOTAL    = 20
+        counter  = [0]*TOTAL
+        position = [0]*TOTAL
+
+        result   = [0]*size
+
+        #Get occurance of each element
+        for i in range(size):
+            counter[array[i]] += 1
+
+        print("counter  result is %s" %counter)
+
+        #Calculate position of element
+        position[0] = counter[0]
+        for i in range(1,TOTAL):
+            position[i] = counter[i] + position[i-1]
+        print("position result is %s" %position)
+
+        #Write each element back to result array
+        for i in range(TOTAL-1, -1, -1):
+            for j in range(counter[i]):
+                result[position[i]-1] = i
+                position[i] -= 1
+
+        print("last result is %s" %result)
+        array[:] = result[:]
+
+    #Get digit correspond with unit
+    def __radixGetDigit(self, num, unit=1):
+        return (num // (10**(unit-1))) % 10
+
+
+    def __radixUnitSort(self, array, unit):
+        size       = array.__len__()
+        unit_array = [0] * size
+
+        #Get unit array
+        for i in range(size):
+            unit_array[i] = self.__radixGetDigit(array[i], unit)
+
+        print("unit %d result is %s" %(unit, unit_array))
+
+        #Sort array according to unit array by counting
+        counter     = [0]*10
+        position    = [0]*10
+        unit_result = [0]*size
+        result      = [0]*size
+
+        for i in range(size):
+            counter[unit_array[i]] += 1
+        print("counter  result is %s" %counter)
+
+        position[0] = counter[0]
+        for i in range(1, size):
+            position[i] = position[i-1] + counter[i]
+        print("position result is %s" %position)
+
+        for i in range(size-1, -1, -1):
+            digit = self.__radixGetDigit(array[i], unit)
+            print("array[%d]=%d unit %d digit is %d" %(i, array[i], unit, digit))
+            position[digit]             -= 1
+            result[position[digit]]   = array[i]
+            print("set result[%d] to be %d, result=%s" %(position[digit], array[i], result))
+
+        print("result array is %s\n" %result)
+        array[:] = result[:]
+
+
+    def radixSort(self, array):
+        units = ["digits", "tens", "hundueds"]
+
+        for unit in range(len(units)):
+            self.__radixUnitSort(array, unit+1)
+
+
+    def bucketSort(self, array):
+        pass
+
+
 if __name__ == '__main__':
     array = [12, 11, 5, 3, 7, 4, 19, 3, 8, 6]
     size  = array.__len__()
@@ -363,9 +446,18 @@ if __name__ == '__main__':
     #target.insertBSearchSort(array)
 
     #希尔插入排序
-    target.insertShellSort(array)
+    #target.insertShellSort(array)
 
     #选择排序
     #target.selectSort(array)
+
+    #计数排序
+    #target.countSort(array)
+
+    #基数排序
+    #target.radixSort(array)
+
+    #桶排序
+    target.bucketSort(array)
 
     print("sorted array is: %s" %array)
