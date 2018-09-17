@@ -413,8 +413,38 @@ class Sorter:
             self.__radixUnitSort(array, unit+1)
 
 
+    def __getBucketId(self, target):
+        return target // 10
+
     def bucketSort(self, array):
-        pass
+        BUCKET_NUM = 10
+        size   = array.__len__()
+        b      = [0]*BUCKET_NUM
+        target = [0]*BUCKET_NUM
+
+        #Calculate elements in each bucket
+        for i in range(size):
+            b[self.__getBucketId(array[i])] += 1
+
+        for i in range(1, size):
+            b[i] = b[i] + b[i-1]
+
+        #Rearrange elements in array to be arranged by bucket
+        for i in range(size-1, -1, -1):
+            bucket_id = self.__getBucketId(array[i])
+            b[bucket_id] -= 1
+            target[b[bucket_id]] = array[i]
+        print("$$$$target array is %s" %target)
+
+        #Copy elements in target back to array
+        array[:] = target[:]
+
+        for i in range(BUCKET_NUM):
+            left  = b[i]  #left为第i个桶左边的元素位置
+            right = (size-1) if i==BUCKET_NUM-1 else b[i+1]-1
+
+            if left < right:
+                self.mergeSort(array, left, right)
 
 
 if __name__ == '__main__':
