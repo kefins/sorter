@@ -446,6 +446,39 @@ class Sorter:
             if left < right:
                 self.mergeSort(array, left, right)
 
+    #Image enough buckets is supplied
+    def bucketFullSort(self, array):
+        BUCKET_NUM = 100
+        b = [0]*BUCKET_NUM
+
+        size = array.__len__()
+
+        for i in range(size):
+            if 0 == b[array[i]]:
+                b[array[i]] = array[i]
+            else:
+                if isinstance(b[array[i]], list):
+                    b[array[i]].append(array[i])
+                if isinstance(b[array[i]], int):
+                    temp = b[array[i]]
+                    b[array[i]] = [temp, array[i]]
+
+        print("bucket is %s" %b)
+        count  = 0
+        target = [0]*size
+        for i in range(BUCKET_NUM):
+            if isinstance(b[i], int) and 0 != b[i]:
+                target[count] = b[i]
+                count += 1
+            if isinstance(b[i], list):
+                sec = b[i].__len__()
+                target[count:(count+sec)] = b[i]
+                count += sec
+
+        print("target is %s" %target)
+
+        array[:] = target[:]
+
 
 if __name__ == '__main__':
     array = [12, 11, 5, 3, 7, 4, 19, 3, 8, 6]
@@ -488,6 +521,8 @@ if __name__ == '__main__':
     #target.radixSort(array)
 
     #桶排序
-    target.bucketSort(array)
+    #target.bucketSort(array)
+
+    target.bucketFullSort(array)
 
     print("sorted array is: %s" %array)
